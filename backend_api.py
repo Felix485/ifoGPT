@@ -11,10 +11,10 @@ def generate_response(prompt):
     # Call the OpenAI API to generate a response
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content":"This is the year 2099.I am a cyberpunk AI. Ask me anything."},{'role': 'user', 'content': prompt}],
-        max_tokens=1024,
+        messages=[{"role": "system", "content":"I am a professional press release writer for the ifo Institute"},{'role': 'user', 'content': prompt}],
+        max_tokens=512,
         n=1,
-        temperature=0.5,
+        temperature=1,
         top_p=1,
         frequency_penalty=0.0,
         presence_penalty=0.6,
