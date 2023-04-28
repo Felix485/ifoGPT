@@ -1,9 +1,10 @@
 import streamlit as st
 import backend_api
+import requests
 
 def main():
     # some Styling
-    st.image("ifo_logo.png", width = 200)
+    st.image("ifo_logo.png", width=200)
     st.markdown("""
         <style>
             .stApp {
@@ -45,12 +46,12 @@ def main():
         st.header("Suggested press release:")
         st.write(f"{result}")
 
-#Adds all the extra info to the prompts
+
+# Adds all the extra info to the prompts
 def modify_prompt(user_input):
-    user_input =  "Create a very short press release using the following keywords:" + user_input  #very short entfernen
+    user_input = "Create a very short press release using the following keywords:" + user_input  # very short entfernen
     return user_input
 
 
 if __name__ == "__main__":
     main()
-
