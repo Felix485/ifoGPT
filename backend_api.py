@@ -25,9 +25,5 @@ def generate_response(prompt):
     return response_text
 
 
-prompt = "Translate the following English text to French: 'Hello, how are you?'"
-print(generate_response(prompt))
-
-
 
 
