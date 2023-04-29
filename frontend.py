@@ -6,8 +6,7 @@ import os
 import image_generator
 from PIL import Image
 
-user_link = "nada"
-citations = "None"
+
 
 def main():
     # some Styling
@@ -70,7 +69,7 @@ def generate_page():
         result = backend_api.twitter_text(user_input)
         st.session_state.generated_text = result
         #searchword = backend_api.keyword(result)
-        image_downloader.download_pexels_image("economy",1)
+        image_downloader.download_pexels_image("economy",0)
         st.write("Navigate to the Edit page now!")
 
 
@@ -78,7 +77,7 @@ def generate_page():
         #st.sidebar.radio("Select a page:", list(pages.keys()), index=1)
 
 def edit_page():
-    st.write("URL to the original press release: " + user_link)
+   # st.write("URL to the original press release: " + user_link)
     st.header("Edit your post:")
 
     if 'generated_text' in st.session_state:

@@ -1,7 +1,7 @@
 import requests
 import os
 
-def download_pexels_image(query, number = "1"):
+def download_pexels_image(query, number = 0):
     api_key = 'S1TbnIy3DI6LeqZ4xqHOxAYViQFrn1a2laS7xrUKcIfFy4EK7f9w7fzG'
     # Create 'stock images' folder if it doesn't exist
     subdirectory = 'downloaded_images'
@@ -13,23 +13,24 @@ def download_pexels_image(query, number = "1"):
     if not os.path.exists(temp_directory):
         os.makedirs(temp_directory)
 
-    directory = os.path.join(temp_directory)
+    if number == 0:
+        directory = os.path.join(temp_directory)
 
-    # Get a list of all files in the directory
-    files = os.listdir(directory)
+        # Get a list of all files in the directory
+        files = os.listdir(directory)
 
-    # Loop through the files and delete each one
-    for file in files:
-        # Construct the full file path
-        file_path = os.path.join(directory, file)
+        # Loop through the files and delete each one
+        for file in files:
+            # Construct the full file path
+            file_path = os.path.join(directory, file)
 
-        # Check if the file is a file (not a subdirectory)
-        if os.path.isfile(file_path):
-            # Delete the file
-            os.remove(file_path)
+            # Check if the file is a file (not a subdirectory)
+            if os.path.isfile(file_path):
+                # Delete the file
+                os.remove(file_path)
 
     # Update save_path to point to the 'Temp' folder
-    file_name = 'image' + number +'.jpg'
+    file_name = 'image' + str(number) +'.jpg'
     save_path = os.path.join(temp_directory, file_name)
 
     headers = {'Authorization': api_key}
@@ -40,7 +41,7 @@ def download_pexels_image(query, number = "1"):
     data = response.json()
 
     if data['photos']:
-        image_url = data['photos'][0]['src']['original']
+        image_url = data['photos'][number]['src']['original']
         response = requests.get(image_url, stream=True)
         response.raise_for_status()
 
