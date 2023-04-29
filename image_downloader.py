@@ -3,10 +3,12 @@ import os
 
 def download_pexels_image( query):
     api_key = 'S1TbnIy3DI6LeqZ4xqHOxAYViQFrn1a2laS7xrUKcIfFy4EK7f9w7fzG'
-    # Create 'Temp' folder if it doesn't exist
-    folder_name = 'Temp'
+    # Create 'stock images' folder if it doesn't exist
+    subdirectory = 'downloaded_images'
     current_directory = os.getcwd()
-    temp_directory = os.path.join(current_directory, folder_name)
+    temp_directory = os.path.join(current_directory, subdirectory)
+    folder_name = 'stock_images'
+    temp_directory = os.path.join(temp_directory, folder_name)
 
     if not os.path.exists(temp_directory):
         os.makedirs(temp_directory)
@@ -37,4 +39,4 @@ def download_pexels_image( query):
 
 
 
-download_pexels_image( "mountain")
+#download_pexels_image( "monkey")

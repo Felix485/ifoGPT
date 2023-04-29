@@ -1,7 +1,11 @@
 import streamlit as st
 import backend_api
+import image_downloader
+import scraping
 import os
 from PIL import Image
+
+user_link = "nada"
 
 def main():
     # some Styling
@@ -50,43 +54,52 @@ def main():
     pages[page]()
 
 def generate_page():
-    user_input = st.text_input("Paste the entire press release:")
+    user_link = st.text_input("Provide the url of the press release:")
 
     if st.button("Generate tailored twitter post!"):
+        user_input = scraping.scrapeurl(user_link)
         result = backend_api.twitter_text(user_input)
         st.session_state.generated_text = result
-        print("Navigate to the Edit page now! ")
+        searchword = backend_api.keyword(result)
+        image_downloader.download_pexels_image(searchword)
+        st.write("Navigate to the Edit page now!" + searchword)
+
 
         # Navigate to the Edit page
-        st.sidebar.radio("Select a page:", list(pages.keys()), index=1)
+        #st.sidebar.radio("Select a page:", list(pages.keys()), index=1)
 
 def edit_page():
-    #TODO Url noch austauschen
-    st.write("URL to the original press release: https://www.ifo.de/pressemitteilung/2023-04-28/konsum-und-industrie-senden-gegensaetzliche-impulse-fuer-deutsche")
+    st.write("URL to the original press release: " + user_link)
     st.header("Edit your post:")
 
     if 'generated_text' in st.session_state:
         editable_text = st.text_area("Edit the post caption:", st.session_state.generated_text)
 
-        # Load images from the 'images' folder
-        image_folder = 'images'
-        image_files = os.listdir(image_folder)
+        # Load images from multiple folders within the 'images' folder
+        parent_image_folder = 'downloaded_images'
+        subfolders = ['cv_images', 'graphic_images', 'stock_images']  # Replace with the names of your image subfolders
+
+        image_files = []
+        for subfolder in subfolders:
+            folder_path = os.path.join(parent_image_folder, subfolder)
+            image_files.extend([(subfolder, f) for f in os.listdir(folder_path)])
 
         # Display image previews with checkboxes
         st.write("Select image(s):")
         selected_images = []
-        for image_file in image_files:
-            image_path = os.path.join(image_folder, image_file)
+        for subfolder, image_file in image_files:
+            image_path = os.path.join(parent_image_folder, subfolder, image_file)
             image = Image.open(image_path)
 
+            unique_key = f"{subfolder}-{image_file}"
             col1, col2 = st.columns([1, 4])
-            selected = col1.checkbox("", key=image_file)
-            col2.image(image, width=400)
+            selected = col1.checkbox("", key=unique_key)
+            col2.image(image, width=300)
 
             if selected:
-                selected_images.append(image_file)
-            elif image_file in selected_images:
-                selected_images.remove(image_file)
+                selected_images.append((subfolder, image_file))
+            elif (subfolder, image_file) in selected_images:
+                selected_images.remove((subfolder, image_file))
 
         if st.button("Update preview"):
             st.write("Preview:")
@@ -94,8 +107,10 @@ def edit_page():
 
             # Display the first selected image
             if selected_images:
-                first_image = Image.open(os.path.join(image_folder, selected_images[0]))
-                st.image(first_image)
+                first_subfolder, first_image = selected_images[0]
+                first_image_path = os.path.join(parent_image_folder, first_subfolder, first_image)
+                first_image_obj = Image.open(first_image_path)
+                st.image(first_image_obj)
     else:
         st.write("No generated text to edit. Please go to the Generate page to create a tailored Twitter post.")
 
