@@ -52,3 +52,11 @@ for url in img_urls:
     download_image(url, save_path)
 
 
+# Text
+title = soup.find('meta', attrs={'name': 'twitter:title'})['content']
+text_list = soup.find_all('p')
+text = " ".join([t.get_text() for t in text_list])
+
+print(title)
+print(text)
+
