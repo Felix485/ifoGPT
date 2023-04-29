@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import textwrap
 
 
-def create_image_with_text(logo_path, text, output_path, font_path=None, max_width=None, input_path=None, line_spacing=30):
+def create_image_with_text(text, logo_path="ifo_logo.png",  output_path="output.png", font_path="WorkSans.ttf", max_width=35, input_path="downloaded_images\cv_images\cvfoto-schultz.jpg", line_spacing=30):
     # Load the logo image
     logo = Image.open(logo_path)
 
@@ -46,11 +46,11 @@ def create_image_with_text(logo_path, text, output_path, font_path=None, max_wid
 
 
 # Example usage:
-input_path = "downloaded_images\cv_images\cvfoto-schultz.jpg"
-logo_path = "ifo_logo.png"
-text = "Dies ist KEIN sehr langer Text über Wirtschaftsnachrichten. Er ist bestimmt sehr wichtig."
-output_path = "output.png"
-font_path = "WorkSans.ttf"  # Path to your desired font (optional)
-max_width = 35  # Maximum number of characters per line (optional)
-create_image_with_text(logo_path, text, output_path, font_path, max_width, input_path)
+#input_path = "downloaded_images\cv_images\cvfoto-schultz.jpg"
+#logo_path = "ifo_logo.png"
+#text = "Dies ist KEIN sehr langer Text über Wirtschaftsnachrichten. Er ist bestimmt sehr wichtig."
+#output_path = "downloaded_images/output_image/output.png"
+#font_path = "WorkSans.ttf"  # Path to your desired font (optional)
+#max_width = 35  # Maximum number of characters per line (optional)
+#create_image_with_text(logo_path, text, output_path, font_path, max_width, input_path)
 

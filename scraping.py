@@ -36,7 +36,7 @@ def scrapeurl(url):
     cv_directory = "cv_images"
     graphic_directory = "graphic_images"
 
-    
+
 
     if not os.path.exists(save_directory):
         os.makedirs(save_directory)
@@ -44,6 +44,36 @@ def scrapeurl(url):
         os.makedirs(os.path.join(save_directory, cv_directory))
     if not os.path.exists(os.path.join(save_directory, graphic_directory)):
         os.makedirs(os.path.join(save_directory, graphic_directory))
+
+    directory = os.path.join(save_directory, cv_directory)
+
+    # Get a list of all files in the directory
+    files = os.listdir(directory)
+
+    # Loop through the files and delete each one
+    for file in files:
+        # Construct the full file path
+        file_path = os.path.join(directory, file)
+
+        # Check if the file is a file (not a subdirectory)
+        if os.path.isfile(file_path):
+            # Delete the file
+            os.remove(file_path)
+
+    directory = os.path.join(save_directory, graphic_directory)
+
+    # Get a list of all files in the directory
+    files = os.listdir(directory)
+
+    # Loop through the files and delete each one
+    for file in files:
+        # Construct the full file path
+        file_path = os.path.join(directory, file)
+
+        # Check if the file is a file (not a subdirectory)
+        if os.path.isfile(file_path):
+            # Delete the file
+            os.remove(file_path)
 
     # Download the images
     for url in img_urls:

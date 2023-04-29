@@ -3,6 +3,7 @@ import backend_api
 import image_downloader
 import scraping
 import os
+import image_generator
 from PIL import Image
 
 user_link = "nada"
@@ -61,8 +62,10 @@ def generate_page():
         result = backend_api.twitter_text(user_input)
         st.session_state.generated_text = result
         searchword = backend_api.keyword(result)
-        image_downloader.download_pexels_image(searchword)
-        st.write("Navigate to the Edit page now!" + searchword)
+        for i in range(5):
+            num = str(i)
+            image_downloader.download_pexels_image(searchword,num)
+        st.write("Navigate to the Edit page now!")
 
 
         # Navigate to the Edit page
@@ -104,10 +107,13 @@ def edit_page():
         if st.button("Update preview"):
             st.write("Preview:")
             st.write(editable_text)
+            selected_path = "downloaded_images/" + selected_images[0][0] + "/"+ selected_images[0][1]
+            image_generator.create_image_with_text(input_path=selected_path,text="ifo-Geschäftsklimaindex für Ostdeutschland steigt auf 96,5 Punkte im April. Unternehmen sehen Zukunft positiver, Lagerwartungen leicht rückläufig. ", output_path="downloaded_images/output_image/output.png")
 
             # Display the first selected image
             if selected_images:
-                first_subfolder, first_image = selected_images[0]
+                first_subfolder = "output_image"
+                first_image = "output.png"
                 first_image_path = os.path.join(parent_image_folder, first_subfolder, first_image)
                 first_image_obj = Image.open(first_image_path)
                 st.image(first_image_obj)
