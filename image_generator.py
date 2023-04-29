@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import textwrap
 
 
-def create_image_with_text(text, logo_path="ifo_logo.png",  output_path="output.png", font_path="WorkSans.ttf", max_width=35, input_path="downloaded_images\cv_images\cvfoto-schultz.jpg", line_spacing=30):
+def create_image_with_text(text, logo_path="layer-1.png",  output_path="output.png", font_path="WorkSans.ttf", max_width=35, input_path="downloaded_images/cv_images/cvfoto-schultz.jpg", line_spacing=30):
     # Load the logo image
     logo = Image.open(logo_path)
 
@@ -11,17 +11,24 @@ def create_image_with_text(text, logo_path="ifo_logo.png",  output_path="output.
     background = Image.new('RGBA', (img_w, img_h), (13,64,128, 255))
 
     # Paste the logo onto the background
-    background.paste(logo, (20, 870))
     im = Image.open(input_path)
     im = im.resize((2000,2000))
     # Define the cropping area (left, upper, right, lower)
     crop_area = (300, 0, 1700, 2000)
     # Crop the image
     cropped_image = im.crop(crop_area)
-    background.paste(cropped_image, (0,0))
+    #background.paste(logo, (0, 0))
+
+    background.paste(im, (2000,0))
+    background.paste(logo, (0, 0), logo)
+
+
 
     # Create a draw object and font object
     draw = ImageDraw.Draw(background)
+    fill_color = (255, 255, 255)
+
+
     if font_path:
         font = ImageFont.truetype(font_path, 120)
     else:
@@ -35,7 +42,7 @@ def create_image_with_text(text, logo_path="ifo_logo.png",  output_path="output.
     # Calculate the size and position of the text
     text_bbox = draw.multiline_textbbox((0, 0), wrapped_text, font=font, spacing=line_spacing, align='center')
     text_w, text_h = text_bbox[2] - text_bbox[0], text_bbox[3] - text_bbox[1]
-    text_x = (img_w - text_w + 1400) // 2
+    text_x = (img_w - text_w - 2000) // 2
     text_y = (img_h//2) - (text_h // 2) 
 
     # Draw the text onto the image
