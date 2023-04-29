@@ -60,15 +60,15 @@ def generate_page():
 
     user_link = st.text_input("Provide the url of the press release:")
 
+#  Wird gemacht wenn Knopf gedrückt wird
     if st.button("Generate tailored twitter post!"):
         user_input, allcitations = scraping.scrapeurl(user_link)
         with open("citation.txt", "w") as file:
-            # Write some text to the file
+            # Write some text to the citation file
             file.write(allcitations[0])
-
         result = backend_api.twitter_text(user_input)
         st.session_state.generated_text = result
-        #searchword = backend_api.keyword(result)
+        #Stockfoto runterladen
         image_downloader.download_pexels_image("economy",0)
         st.write("Navigate to the Edit page now!")
 
@@ -79,7 +79,7 @@ def generate_page():
 def edit_page():
    # st.write("URL to the original press release: " + user_link)
     st.header("Edit your post:")
-
+    #bearbeitbares Textfeld
     if 'generated_text' in st.session_state:
         editable_text = st.text_area("Edit the post caption:", st.session_state.generated_text)
 
@@ -87,6 +87,7 @@ def edit_page():
         parent_image_folder = 'downloaded_images'
         subfolders = ['cv_images', 'graphic_images', 'stock_images']  # Replace with the names of your image subfolders
 
+    #create list with all relevant images from all subfolders in downloaded_images
         image_files = []
         for subfolder in subfolders:
             folder_path = os.path.join(parent_image_folder, subfolder)
@@ -103,12 +104,13 @@ def edit_page():
             col1, col2 = st.columns([1, 4])
             selected = col1.checkbox("", key=unique_key)
             col2.image(image, width=300)
-
+    #add selected images to selected_images variable
             if selected:
                 selected_images.append((subfolder, image_file))
             elif (subfolder, image_file) in selected_images:
                 selected_images.remove((subfolder, image_file))
 
+    #Create the preview
         if st.button("Update preview"):
             st.write("Preview:")
             st.write(editable_text)
@@ -117,9 +119,10 @@ def edit_page():
             with open("citation.txt", "r") as file:
                 # Read the contents of the file into a string variable
                 citations = file.read()
+                #create the merged image with citation
             image_generator.create_image_with_text(input_path=selected_path,text= citations, output_path="downloaded_images/output_image/output.png")
 
-            # Display the first selected image
+            # Display the  selected image (first = the selected one)
             if selected_images:
                 first_subfolder = "output_image"
                 first_image = "output.png"
