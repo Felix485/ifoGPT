@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import os
+import re
 
 
 def download_image(url, save_path):
@@ -90,5 +91,6 @@ def scrapeurl(url):
     title = soup.find('meta', attrs={'name': 'twitter:title'})['content']
     text_list = soup.find_all('p')
     text = " ".join([t.get_text() for t in text_list])
+    citations = re.findall(r'„(.*?)“', text)
 
-    return text
+    return text, citations
