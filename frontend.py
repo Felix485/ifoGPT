@@ -7,6 +7,7 @@ import image_generator
 from PIL import Image
 
 user_link = "nada"
+citations = "None"
 
 def main():
     # some Styling
@@ -55,16 +56,21 @@ def main():
     pages[page]()
 
 def generate_page():
+    global citations
+    global user_link
+
     user_link = st.text_input("Provide the url of the press release:")
 
     if st.button("Generate tailored twitter post!"):
-        user_input = scraping.scrapeurl(user_link)
+        user_input, allcitations = scraping.scrapeurl(user_link)
+        with open("citation.txt", "w") as file:
+            # Write some text to the file
+            file.write(allcitations[0])
+
         result = backend_api.twitter_text(user_input)
         st.session_state.generated_text = result
-        searchword = backend_api.keyword(result)
-        for i in range(5):
-            num = str(i)
-            image_downloader.download_pexels_image(searchword,num)
+        #searchword = backend_api.keyword(result)
+        image_downloader.download_pexels_image("economy",1)
         st.write("Navigate to the Edit page now!")
 
 
@@ -108,7 +114,11 @@ def edit_page():
             st.write("Preview:")
             st.write(editable_text)
             selected_path = "downloaded_images/" + selected_images[0][0] + "/"+ selected_images[0][1]
-            image_generator.create_image_with_text(input_path=selected_path,text="ifo-Geschäftsklimaindex für Ostdeutschland steigt auf 96,5 Punkte im April. Unternehmen sehen Zukunft positiver, Lagerwartungen leicht rückläufig. ", output_path="downloaded_images/output_image/output.png")
+            # Open the file for reading
+            with open("citation.txt", "r") as file:
+                # Read the contents of the file into a string variable
+                citations = file.read()
+            image_generator.create_image_with_text(input_path=selected_path,text= citations, output_path="downloaded_images/output_image/output.png")
 
             # Display the first selected image
             if selected_images:
