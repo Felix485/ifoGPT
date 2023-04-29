@@ -30,7 +30,7 @@ def create_image_with_text(text, logo_path="layer-1.png",  output_path="output.p
 
 
     if font_path:
-        font = ImageFont.truetype(font_path, 120)
+        font = ImageFont.truetype(font_path, 100)
     else:
         font = ImageFont.load_default()
 
