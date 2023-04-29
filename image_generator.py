@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import textwrap
 
 
-def create_image_with_text(text, logo_path="layer-1.png",  output_path="output.png", font_path="WorkSans.ttf", max_width=35, input_path="downloaded_images/cv_images/cvfoto-schultz.jpg", line_spacing=30):
+def create_image_with_text(text, logo_path="layer-1.png",  output_path="output.png", font_path="WorkSans.ttf", max_width=25, input_path="downloaded_images/cv_images/cvfoto-schultz.jpg", line_spacing=30):
     # Load the logo image
     logo = Image.open(logo_path)
 
