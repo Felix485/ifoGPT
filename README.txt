@@ -11,7 +11,7 @@ Once you have your API keys, you will need to install the necessary Python packa
 
 bash
 Copy code
-pip install -r requirements.txt ,streamlit and some more things, depending on what you already have installed.
+pip install -r requirements.txt.
 You will also need to create a key.txt file with your GPT key.
 
 Usage
