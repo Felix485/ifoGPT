@@ -1,8 +1,11 @@
 import requests
 import os
 
+with open('pexels.txt', 'r') as file:
+    api_key = file.read().replace('\n', '')
+
 def download_pexels_image(query, number = 0):
-    api_key = 'S1TbnIy3DI6LeqZ4xqHOxAYViQFrn1a2laS7xrUKcIfFy4EK7f9w7fzG'
+
     # Create 'stock images' folder if it doesn't exist
     subdirectory = 'downloaded_images'
     current_directory = os.getcwd()
