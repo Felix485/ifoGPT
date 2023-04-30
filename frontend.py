@@ -5,6 +5,8 @@ import scraping
 import os
 import image_generator
 from PIL import Image
+import urllib.parse
+
 
 
 
@@ -55,22 +57,22 @@ def main():
     pages[page]()
 
 def generate_page():
+
     global citations
     global user_link
 
     user_link = st.text_input("Provide the url of the press release:")
 
 #  Wird gemacht wenn Knopf gedrückt wird
-    if st.button("Generate tailored twitter post!"):
+    if st.button("Generate tailored twitter post"):
         user_input, allcitations = scraping.scrapeurl(user_link)
-        with open("citation.txt", "w") as file:
-            # Write some text to the citation file
-            file.write(allcitations[0])
+        #if 'allcitations' not in st.session_state:
+        st.session_state.allcitations = allcitations
         result = backend_api.twitter_text(user_input)
-        st.session_state.generated_text = result
+        st.session_state.generated_text = result + " " + user_link
         #Stockfoto runterladen
         image_downloader.download_pexels_image("economy",0)
-        st.write("Navigate to the Edit page now!")
+        st.header("Navigate to the Edit page now!")
 
 
         # Navigate to the Edit page
@@ -78,49 +80,73 @@ def generate_page():
 
 def edit_page():
    # st.write("URL to the original press release: " + user_link)
-    st.header("Edit your post:")
+    st.header("Edit the twitter post caption, if desired:")
     #bearbeitbares Textfeld
     if 'generated_text' in st.session_state:
-        editable_text = st.text_area("Edit the post caption:", st.session_state.generated_text)
-
+        editable_text = st.text_area("", st.session_state.generated_text, height=200)
+        st.header("Choose a picture to accompany the post:")
         # Load images from multiple folders within the 'images' folder
         parent_image_folder = 'downloaded_images'
         subfolders = ['cv_images', 'graphic_images', 'stock_images']  # Replace with the names of your image subfolders
 
-    #create list with all relevant images from all subfolders in downloaded_images
+        #create list with all relevant images from all subfolders in downloaded_images
         image_files = []
+        selected_images = []  # Initialize an empty list to store selected image paths
+
+        # Create the columns for the images and checkboxes
+        col1, col2, col3 = st.columns([1, 2, 1.5])
+
         for subfolder in subfolders:
             folder_path = os.path.join(parent_image_folder, subfolder)
             image_files.extend([(subfolder, f) for f in os.listdir(folder_path)])
+            image_files2 = [(f"{parent_image_folder}/{subfolder}/{filename}") for filename in os.listdir(folder_path)]
 
-        # Display image previews with checkboxes
-        st.write("Select image(s):")
-        selected_images = []
-        for subfolder, image_file in image_files:
-            image_path = os.path.join(parent_image_folder, subfolder, image_file)
-            image = Image.open(image_path)
+            # Add a heading for the column
+            if subfolder == 'cv_images':
+                col1.subheader("Writers")
+                column = col1
+            elif subfolder == 'graphic_images':
+                col2.subheader("Graphs")
+                column = col2
+            else:
+                col3.subheader("Stock Picture")
+                column = col3
 
-            unique_key = f"{subfolder}-{image_file}"
-            col1, col2 = st.columns([1, 4])
-            selected = col1.checkbox("", key=unique_key)
-            col2.image(image, width=300)
-    #add selected images to selected_images variable
-            if selected:
-                selected_images.append((subfolder, image_file))
-            elif (subfolder, image_file) in selected_images:
-                selected_images.remove((subfolder, image_file))
+            for i, image_file in enumerate(image_files2):
+                # Load the image and display it in the column
+                image = Image.open(image_file)
+                column.image(image, use_column_width=True)
+
+                # Display the checkbox with a unique key based on the image filename
+                if column.checkbox("", key=f"{subfolder}_{i}_{os.path.basename(image_file)}"):
+                    selected_images.append(image_file)  # Add the path of the selected image to the list
+
+
+        
+    # Users can choose citations they want to include and edit them
+        st.header("Select and edit citation(s):")
+        selected_citations = [] # Create an empty list to store the selected citations
+        for i, citation in enumerate(st.session_state.allcitations): # Create a checkbox for each citation and add it to the selected_citations list if it's checked
+            checkbox = st.checkbox(citation, key=f"checkbox_{i}")
+            if checkbox:
+                selected_citations.append(citation)
+        selected_citations_str = st.text_area("Edit citations if desired", value="\n".join(selected_citations), height=150)
+
 
     #Create the preview
         if st.button("Update preview"):
-            st.write("Preview:")
+            st.header("Preview:")
             st.write(editable_text)
-            selected_path = "downloaded_images/" + selected_images[0][0] + "/"+ selected_images[0][1]
-            # Open the file for reading
-            with open("citation.txt", "r") as file:
-                # Read the contents of the file into a string variable
-                citations = file.read()
-                #create the merged image with citation
-            image_generator.create_image_with_text(input_path=selected_path,text= citations, output_path="downloaded_images/output_image/output.png")
+            selected_path = selected_images[0]
+            #selected_path = "downloaded_images/" + selected_images[0][0] + "/"+ selected_images[0][1]
+
+            if selected_citations_str == '':
+                image = Image.open(selected_path)
+                image.save("downloaded_images/output_image/output.png")
+                image.close()
+            else:
+                image_generator.create_image_with_text(input_path=selected_path,text= selected_citations_str, output_path="downloaded_images/output_image/output.png")
+
 
             # Display the  selected image (first = the selected one)
             if selected_images:
@@ -129,6 +155,13 @@ def edit_page():
                 first_image_path = os.path.join(parent_image_folder, first_subfolder, first_image)
                 first_image_obj = Image.open(first_image_path)
                 st.image(first_image_obj)
+    # Twitter Button
+            st.header("Preview on Twitter")
+            st.write("Add image by selecting path: downloaded_images\output_image\output.png ")
+            encoded_tweet_text = urllib.parse.quote(editable_text)
+            twitter_url = f"https://twitter.com/intent/tweet?text={encoded_tweet_text}"
+            tweet_button = f'<a href="{twitter_url}" target="_blank"><img src="https://simplesharebuttons.com/images/somacro/twitter.png" alt="Tweet" width="50" height="50"/></a>'
+            st.markdown(tweet_button, unsafe_allow_html=True)
     else:
         st.write("No generated text to edit. Please go to the Generate page to create a tailored Twitter post.")
 

@@ -1,2 +1,6 @@
 downloaded_images
+output_images
 key.txt
+*.pyc
+frontend_test.py
+test.py
