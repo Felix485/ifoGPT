@@ -6,7 +6,13 @@ import os
 import image_generator
 from PIL import Image
 import urllib.parse
+import base64
 
+
+def image_to_base64(img_path):
+    with open(img_path, "rb") as img_file:
+        encoded_string = base64.b64encode(img_file.read()).decode("utf-8")
+    return encoded_string
 
 def main():
     # some Styling
@@ -155,10 +161,11 @@ def edit_page():
                 st.image(first_image_obj)
     # Twitter Button
             st.header("Preview on Twitter")
-            st.write("Add image by selecting path: downloaded_images\output_image\output.png ")
+            st.write("Add image by selecting path: downloaded_images\\output_image\\output.png ")
             encoded_tweet_text = urllib.parse.quote(editable_text)
             twitter_url = f"https://twitter.com/intent/tweet?text={encoded_tweet_text}"
-            tweet_button = f'<a href="{twitter_url}" target="_blank"><img src="https://simplesharebuttons.com/images/somacro/twitter.png" alt="Tweet" width="50" height="50"/></a>'
+            encoded_twitter_image = image_to_base64("./twitter.png")
+            tweet_button = f'<a href="{twitter_url}" target="_blank"><img src="data:image/png;base64,{encoded_twitter_image}" alt="Tweet" width="50" height="50"/></a>'
             st.markdown(tweet_button, unsafe_allow_html=True)
     else:
         st.write("No generated text to edit. Please go to the Generate page to create a tailored Twitter post.")
