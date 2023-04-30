@@ -6,18 +6,18 @@ This project is a proof of concept for a Twitter bot that automatically generate
 ### Capabilities
 - users supply ifo webpage they want to tweet about
 - our product will
-  - summarize the news into tweet length, using the GPT language model
+  - summarize the news into tweet length, using the GPT 3.5 API language model
   - propose webscraped images and citations to illustrate the tweet
-  - everything is editable
+  - let you edit everything
   - navigate to Twitter with the post
 
-The bot uses the GPT-3.5 API to generate tailored text for each tweet, and also includes an image related to the content of the press release.
 
 ## Getting Started
-To get started with this project, you will need to have a GPT-3.5 API key. You can sign up for a GPT-3.5 API key from OpenAI.
-@Jury: if necessary, we can supply a key
+To get started with this project, you will need to have a GPT-3.5 API key, as well as a pexels API key. You can sign up for the keys at OpenAI and Pexels respectively.
+@Jury: if necessary, we can supply both keys 
 
-- create or save a ifoGPT/key.txt file containing your GPT key
+- create or save a key.txt file containing your GPT key in the ifoGPT folder
+- create or save a pexels.txt file containing your Pexels key in the ifoGPT folder
 - open a command prompt from folder ifoGPT
 - pip install -r requirements.txt
 
