@@ -25,6 +25,7 @@ To get started with this project, you will need to have a GPT-3.5 API key, as we
 ## Usage
 - open a command prompt from folder ifoGPT
 - run: streamlit run frontend.py
+- enter the URL of a ifo press release and click generate. Then navigate to the edit page using the sidebar.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more information.
