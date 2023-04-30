@@ -30,7 +30,7 @@ def generate_response(prompt):
 
 
 def twitter_text(pr_text):
-    prompt = "generate a very short german twitter post text out of this press release for the ifo institute: " + pr_text
+    prompt = "generate a very short german twitter post text out of this press release for the ifo institute. one post should be 180 characters maximum: " + pr_text
     output_text = generate_response(prompt)
     return output_text
 
