@@ -1,8 +1,9 @@
 from PIL import Image, ImageDraw, ImageFont
 import textwrap
+import streamlit as st
 
 
-def create_image_with_text(text, logo_path="layer-1.png",  output_path="output.png", font_path="WorkSans.ttf", max_width=25, input_path="downloaded_images/cv_images/cvfoto-schultz.jpg", line_spacing=30):
+def create_image_with_text(text, logo_path="layer-1.png",  output_path="output.png", font_path="WorkSans.ttf", max_width=31, input_path="downloaded_images/cv_images/cvfoto-schultz.jpg", line_spacing=30):
     # Load the logo image
     logo = Image.open(logo_path)
 
@@ -37,7 +38,11 @@ def create_image_with_text(text, logo_path="layer-1.png",  output_path="output.p
     # Wrap the text into multiple lines if it's too long
     if max_width is None:
         max_width = img_w
-    wrapped_text = textwrap.fill(text, width=max_width, break_long_words=True, break_on_hyphens=True)
+    try:
+        wrapped_text = textwrap.fill(text, width=max_width, break_long_words=True, break_on_hyphens=True)
+    except AttributeError as e:
+        st.error(f"Text: {text} Error: {e}")
+        raise
 
     # Calculate the size and position of the text
     text_bbox = draw.multiline_textbbox((0, 0), wrapped_text, font=font, spacing=line_spacing, align='center')

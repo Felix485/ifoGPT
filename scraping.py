@@ -36,6 +36,7 @@ def scrapeurl(url):
     save_directory = "downloaded_images"
     cv_directory = "cv_images"
     graphic_directory = "graphic_images"
+    output_directory = "output_image"
 
 
 
@@ -45,6 +46,8 @@ def scrapeurl(url):
         os.makedirs(os.path.join(save_directory, cv_directory))
     if not os.path.exists(os.path.join(save_directory, graphic_directory)):
         os.makedirs(os.path.join(save_directory, graphic_directory))
+    if not os.path.exists(os.path.join(save_directory, output_directory)):
+        os.makedirs(os.path.join(save_directory, output_directory))
 
     directory = os.path.join(save_directory, cv_directory)
 
@@ -90,7 +93,8 @@ def scrapeurl(url):
     # Text
     title = soup.find('meta', attrs={'name': 'twitter:title'})['content']
     text_list = soup.find_all('p')
-    text = " ".join([t.get_text() for t in text_list])
+    text_string = " ".join([t.get_text() for t in text_list])
+    text = title + text_string
     citations = re.findall(r'„(.*?)“', text)
 
     return text, citations
