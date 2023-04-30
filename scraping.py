@@ -93,7 +93,8 @@ def scrapeurl(url):
     # Text
     title = soup.find('meta', attrs={'name': 'twitter:title'})['content']
     text_list = soup.find_all('p')
-    text = " ".join([t.get_text() for t in text_list])
+    text_string = " ".join([t.get_text() for t in text_list])
+    text = title + text_string
     citations = re.findall(r'„(.*?)“', text)
 
     return text, citations
