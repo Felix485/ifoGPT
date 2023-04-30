@@ -8,8 +8,6 @@ from PIL import Image
 import urllib.parse
 
 
-
-
 def main():
     # some Styling
     st.image("ifo_logo.png", width=200)

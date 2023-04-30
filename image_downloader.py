@@ -1,40 +1,43 @@
 import requests
 import os
 
+# Read the API key from the file
 with open('pexels.txt', 'r') as file:
-    api_key = file.read().replace('\n', '')
+    api_key = file.read().strip()
 
-def download_pexels_image(query, number = 0):
 
-    # Create 'stock images' folder if it doesn't exist
-    subdirectory = 'downloaded_images'
+def download_pexels_image(query, number=0):
+    """
+    Download an image from Pexels based on a given query.
+
+    :param query: Search query for the image
+    :param number: Image number in the search results (default: 0)
+    """
+
+    # Create 'stock_images' folder if it doesn't exist
+
     current_directory = os.getcwd()
+    subdirectory = 'downloaded_images'
     temp_directory = os.path.join(current_directory, subdirectory)
     folder_name = 'stock_images'
-    temp_directory = os.path.join(temp_directory, folder_name)
+    stock_images_directory = os.path.join(temp_directory, folder_name)
 
-    if not os.path.exists(temp_directory):
-        os.makedirs(temp_directory)
+    if not os.path.exists(stock_images_directory):
+        os.makedirs(stock_images_directory)
 
+    # Remove all files in the 'stock_images' folder if number is 0
     if number == 0:
-        directory = os.path.join(temp_directory)
+        files = os.listdir(stock_images_directory)
 
-        # Get a list of all files in the directory
-        files = os.listdir(directory)
-
-        # Loop through the files and delete each one
         for file in files:
-            # Construct the full file path
-            file_path = os.path.join(directory, file)
+            file_path = os.path.join(stock_images_directory, file)
 
-            # Check if the file is a file (not a subdirectory)
             if os.path.isfile(file_path):
-                # Delete the file
                 os.remove(file_path)
 
-    # Update save_path to point to the 'Temp' folder
-    file_name = 'image' + str(number) +'.jpg'
-    save_path = os.path.join(temp_directory, file_name)
+    # Save the image in the 'stock_images' folder
+    file_name = f'image{number}.jpg'
+    save_path = os.path.join(stock_images_directory, file_name)
 
     headers = {'Authorization': api_key}
     url = f'https://api.pexels.com/v1/search?query={query}&per_page=1&page=1'
@@ -55,7 +58,3 @@ def download_pexels_image(query, number = 0):
         print(f'Image saved as {save_path}')
     else:
         print(f'No images found for query: {query}')
-
-
-
-#download_pexels_image( "monkey")
