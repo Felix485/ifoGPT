@@ -15,6 +15,7 @@ def download_pexels_image(query, number=0):
     """
 
     # Create 'stock_images' folder if it doesn't exist
+
     current_directory = os.getcwd()
     subdirectory = 'downloaded_images'
     temp_directory = os.path.join(current_directory, subdirectory)
