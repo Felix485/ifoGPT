@@ -1,6 +1,8 @@
 # ifo Institute Twitter Bot
 
 ## Introduction
+Automate tweets with ifo Institute Twitter Bot! It summarizes press releases, suggests images & citations, lets you edit posts, and navigates to Twitter. Save time & engage audiences effectively!
+
 This project is a proof of concept for a Twitter bot that automatically generates tweets based on press releases from the ifo Institute. It is targeted to communications staff and helps them share news and press releases on Twitter.
 
 ### Capabilities
