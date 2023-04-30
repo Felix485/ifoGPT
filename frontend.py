@@ -63,7 +63,7 @@ def generate_page():
 
 #  Wird gemacht wenn Knopf gedrückt wird
     if st.button("Generate tailored twitter post"):
-        user_input, allcitations = scraping.scrapeurl(user_link)
+        user_input, allcitations = scraping.scrape_url(user_link)
         #if 'allcitations' not in st.session_state:
         st.session_state.allcitations = allcitations
         result = backend_api.twitter_text(user_input)
